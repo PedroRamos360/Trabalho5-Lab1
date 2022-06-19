@@ -27,10 +27,10 @@ int jogador(char nome_jogador[32]) {
 
         // Resultado
         printf("Jogando os dados...\n");
-        Sleep(1000);
+        Sleep(2000);
         printf("Resultado dos dados: ");
         for (int i = 0; i < quantidade_dados; i++) printf("%d ", dados[i]);
-        Sleep(1000);
+        Sleep(2000);
 
         // Verificação de sequências
         if (quantidade_dados == 5) {
@@ -44,7 +44,7 @@ int jogador(char nome_jogador[32]) {
                 quantidade_dados -= 5;
                 printf("\n####### SEQUENCIA DE 1 A 5 => +500 PONTOS #######");
                 printf("\nPontuacao %s: %d\n", nome_jogador, pontos);
-                Sleep(1000);
+                Sleep(2000);
                 continue;
             }
             // de 2 a 6
@@ -57,7 +57,7 @@ int jogador(char nome_jogador[32]) {
                 quantidade_dados -= 5;
                 printf("\n####### SEQUENCIA DE 2 A 6 => +500 PONTOS #######");
                 printf("\nPontuacao %s: %d\n", nome_jogador, pontos);
-                Sleep(1000);
+                Sleep(2000);
                 continue;
             }
         }
@@ -74,7 +74,7 @@ int jogador(char nome_jogador[32]) {
                             printf("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
                             printf("\n@@@@@@ %s GANHOU O JOGO!!! @@@@@@", nome_jogador);
                             printf("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                            Sleep(1000);
+                            Sleep(2000);
                             return pontos;
                         }
                         int add = pow(2, count_numeros[i] - 3) * 1000;
@@ -82,7 +82,7 @@ int jogador(char nome_jogador[32]) {
                         quantidade_dados -= count_numeros[i];
                         printf("\n####### SEQUENCIA DE %d 1s => +%d PONTOS #######\n", count_numeros[i], add);
                         printf("Pontuacao %s: %d\n", nome_jogador, pontos);
-                        Sleep(1000);
+                        Sleep(2000);
                         break;
                     }
                     int add = pow(2, count_numeros[i] - 3) * 100 * (i+1);
@@ -90,7 +90,7 @@ int jogador(char nome_jogador[32]) {
                     quantidade_dados -= count_numeros[i];
                     printf("\n####### SEQUENCIA DE %d %ds => +%d PONTOS #######\n", count_numeros[i], i+1, add);
                     printf("Pontuacao %s: %d\n", nome_jogador, pontos);
-                    Sleep(1000);
+                    Sleep(2000);
                     break;
                 }
             }
@@ -106,7 +106,7 @@ int jogador(char nome_jogador[32]) {
                 printf("\nDeseja continuar jogando? (0 ou 1): ");
                 scanf("%d", &continuar_jogando);
                 printf("\n################## Fim do turno ##################\n");
-                Sleep(1000);
+                Sleep(2000);
                 if (!continuar_jogando) return pontos;
             }
             printf("\nQuais dados gostaria de separar?");
@@ -132,11 +132,11 @@ int jogador(char nome_jogador[32]) {
                 }
             }
             printf("Pontuacao %s: %d\n", nome_jogador, pontos);
-            Sleep(1000);
+            Sleep(2000);
         } else {
             printf("\nNenhuma combinacao ocorreu!");
             printf("\n################## Fim do turno ##################\n");
-            Sleep(1000);
+            Sleep(2000);
             pontos = 0;
             quantidade_dados = 5;
             return pontos;
@@ -144,9 +144,157 @@ int jogador(char nome_jogador[32]) {
     }
 }
 
-int computador() {
+int computador(int pontos_jogador, int pontos_computador) {
+    int quantidade_dados = 5;
     int pontos = 0;
-    return pontos;
+    int dados[5];
+    int rodadas = 1;
+    while (1) {
+        // Inicialização da rodada e contagem das ocorrências de cada número
+        printf("############### Computador - Rodada %d ###############\n", rodadas);
+        rodadas++;
+        int count_numeros[6] = {0, 0, 0, 0, 0, 0}; // pos 0 conta a quantidade de 1s, pos 1 conta quantidade de 2s e assim por diante
+        
+        // caso todos os dados jogados tenham somado pontos, jogam-se todos novamente
+        if (quantidade_dados == 0) quantidade_dados = 5;
+
+        for (int i1 = 0; i1 < quantidade_dados; i1++) {
+            dados[i1] = rand() % 6 + 1;
+            for (int i = 1; i <= 6; i ++) {
+                if (dados[i1] == i) count_numeros[i-1]++;
+            }
+        }
+
+        // Resultado
+        printf("Jogando os dados...\n");
+        Sleep(2000);
+        printf("Resultado dos dados: ");
+        for (int i = 0; i < quantidade_dados; i++) printf("%d ", dados[i]);
+        Sleep(2000);
+
+        // Verificação de sequências
+        if (quantidade_dados == 5) {
+            // de 1 a 5
+            int sequencia1a5 = 1;
+            for (int i = 0; i < 5; i++) {
+                if (count_numeros[i] != 1) sequencia1a5 = 0;
+            }
+            if (sequencia1a5) {
+                pontos += 500;
+                quantidade_dados -= 5;
+                printf("\n####### SEQUENCIA DE 1 A 5 => +500 PONTOS #######");
+                printf("\nPontuacao Computador: %d\n", pontos);
+                Sleep(2000);
+                continue;
+            }
+            // de 2 a 6
+            int sequencia2a6 = 1;
+            for (int i = 1; i < 6; i++) {
+                if (count_numeros[i] != 1) sequencia2a6 = 0;
+            }
+            if (sequencia2a6) {
+                pontos += 500;
+                quantidade_dados -= 5;
+                printf("\n####### SEQUENCIA DE 2 A 6 => +500 PONTOS #######");
+                printf("\nPontuacao Computador: %d\n", pontos);
+                Sleep(2000);
+                continue;
+            }
+        }
+
+
+        // de 3x um número (ou mais)
+        if (quantidade_dados >= 3) {
+            int sequencia3x = 0;
+            for (int i = 0; i < 6; i++) {
+                if (count_numeros[i] >= 3) {
+                    sequencia3x = 1;
+                    if (i == 0) {
+                        if (count_numeros[i] == 5) {
+                            printf("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                            printf("\n@@@@@@ Computador GANHOU O JOGO!!! @@@@@@");
+                            printf("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                            Sleep(2000);
+                            return pontos;
+                        }
+                        int add = pow(2, count_numeros[i] - 3) * 1000;
+                        pontos += add;
+                        quantidade_dados -= count_numeros[i];
+                        printf("\n####### SEQUENCIA DE %d 1s => +%d PONTOS #######\n", count_numeros[i], add);
+                        printf("Pontuacao Computador: %d\n", pontos);
+                        Sleep(2000);
+                        break;
+                    }
+                    int add = pow(2, count_numeros[i] - 3) * 100 * (i+1);
+                    pontos += add;
+                    quantidade_dados -= count_numeros[i];
+                    printf("\n####### SEQUENCIA DE %d %ds => +%d PONTOS #######\n", count_numeros[i], i+1, add);
+                    printf("Pontuacao Computador: %d\n", pontos);
+                    Sleep(2000);
+                    break;
+                }
+            }
+            if (sequencia3x) {
+                continue;
+            }
+        }
+
+        // Verificação de separação dos 5s e 1s
+        if (count_numeros[4] > 0 || count_numeros[0] > 0) {
+            if (pontos >= 600) {
+                int continuar_jogando;
+                printf("\nDeseja continuar jogando?: ");
+                Sleep(2000);
+                if (pontos_jogador > pontos_computador) {
+                    printf("1");
+                    continuar_jogando = 1;
+                } else {
+                    if (pontos >= 250) {
+                        printf("0");
+                        continuar_jogando = 0;
+                    } else {
+                        printf("1");
+                        continuar_jogando = 1;
+                    }
+                }
+
+
+                printf("\n################## Fim do turno ##################\n");
+                Sleep(2000);
+                if (!continuar_jogando) return pontos;
+            }
+            printf("\nQuais dados gostaria de separar?\n");
+            Sleep(2000);
+            int dados_para_separar[5];
+            // Como o computador simplesmente separa todos dados que pontua
+            // dados_para_separar = dados (o programa desconsidera dados que não pontuam)
+            for (int i = 0; i < 5; i++) {
+                dados_para_separar[i] = dados[i];
+            }
+            printf("Dados separados: ");
+            int copia_quantidade_dados = quantidade_dados;
+            for (int i = 0; i < copia_quantidade_dados; i++) {
+                if (dados_para_separar[i] == 1)  {
+                    printf("%d ", i+1);
+                    pontos += 100;
+                    quantidade_dados--;
+                } else if (dados_para_separar[i] == 5) {
+                    printf("%d ", i+1);
+                    pontos += 50;
+                    quantidade_dados--;
+                }
+            }
+            printf("\nPontuacao Computador: %d\n", pontos);
+            Sleep(2000);
+        } else {
+            printf("\nNenhuma combinacao ocorreu!");
+            printf("\n################## Fim do turno ##################\n");
+            Sleep(2000);
+            pontos = 0;
+            quantidade_dados = 5;
+            return pontos;
+        }
+    }
 }
 
 int main() {
@@ -159,34 +307,36 @@ int main() {
     int dados[5] = {0, 0, 0, 0, 0};
     int quantidade_dados = 5;
 
-    int jogador1_comeca = 1;//rand() % 2;
+    int jogador1_comeca = 0;//rand() % 2;
     char nome_jogador[32];
     printf("Digite o nome do jogador: ");
     scanf("%s", nome_jogador);
     if (jogador1_comeca) {
         printf("%s comeca:\n", nome_jogador);
-    } else printf("Computador começa");
+    } else printf("Computador comeca\n");
 
     int pontos_jogador = 0;
     int pontos_computador = 0;
 
     while (1) {
+        pontos_computador += computador(pontos_jogador, pontos_computador);
+        printf("\nPONTUACAO TOTAL COMPUTADOR: %d\n", pontos_computador);
+            if (pontos_jogador >= 5000) {
+            printf("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            printf("\n@@@@ O COMPUTADOR GANHOU O JOGO!!! @@@@");
+            printf("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            break;
+        }
+        Sleep(2000);
         pontos_jogador += jogador(nome_jogador);
         printf("\nPONTUACAO TOTAL %s: %d\n", nome_jogador, pontos_jogador);
         if (pontos_jogador >= 5000) {
             printf("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             printf("\n@@@@@@ %s GANHOU O JOGO!!! @@@@@@", nome_jogador);
             printf("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            break;
         }
-        Sleep(1000);
-        pontos_computador += computador();
-        printf("\nPONTUACAO TOTAL COMPUTADOR %s: %d\n", nome_jogador, pontos_jogador);
-            if (pontos_jogador >= 5000) {
-            printf("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            printf("\n@@@@ O COMPUTADOR GANHOU O JOGO!!! @@@@", nome_jogador);
-            printf("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        }
-        Sleep(1000);
+        Sleep(2000);
     }
 
     
