@@ -5,7 +5,7 @@
 
 int main() {
     srand(time(NULL));  
-    int dados[5];
+    int dados[5] = {4, 4, 4, 1, 5};
     printf("------------------------------------------------\n");
     printf("------------------JOGO DO 5000------------------\n");
     printf("------------------------------------------------\n");
@@ -23,7 +23,7 @@ int main() {
         rodadas++;
         int count_numeros[6] = {0, 0, 0, 0, 0, 0}; // pos 0 conta a quantidade de 1s, pos 1 conta quantidade de 2s e assim por diante
         for (int i1 = 0; i1 < 5; i1++) {
-            dados[i1] = rand() % 6 + 1;
+            // dados[i1] = rand() % 6 + 1;
             for (int i = 1; i <= 6; i ++) {
                 if (dados[i1] == i) count_numeros[i-1]++;
             }
@@ -60,7 +60,7 @@ int main() {
         // Verificação de sequência de 3x um número
         int sequencia3x = 0;
         for (int i = 0; i < 6; i++) {
-            if (count_numeros[i] > 3) {
+            if (count_numeros[i] >= 3) {
                 sequencia3x = 1;
                 if (i == 0 && count_numeros[i] == 5) {
                     if (count_numeros[i] == 5) {
@@ -69,13 +69,14 @@ int main() {
                         printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
                         return 0;
                     }
-                    pontos += pow(count_numeros[i] - 3, 2) * 1000;
-                    printf("\n####### SEQUENCIA DE %d 1s => +%d PONTOS #######\n", count_numeros[i], pontos);
+                    int add = pow(2, count_numeros[i] - 3) * 100 * (i+1);
+                    pontos += add;
+                    printf("\n####### SEQUENCIA DE %d 1s => +%d PONTOS #######\n", count_numeros[i], add);
                     break;
                 }
-                pontos += pow(count_numeros[i] - 3, 2) * 100 * (i+1);
-                printf("\n####### SEQUENCIA DE %dX %d => +%d PONTOS #######\n", count_numeros[i], i+1, pontos);
-
+                int add = pow(2, count_numeros[i] - 3) * 100 * (i+1);
+                pontos += add;
+                printf("\n####### SEQUENCIA DE %d %ds => +%d PONTOS #######\n", count_numeros[i], i+1, add);
                 break;
             }
         }
