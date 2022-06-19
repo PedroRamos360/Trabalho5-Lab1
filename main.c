@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 int main() {
     srand(time(NULL));  
@@ -17,18 +18,75 @@ int main() {
     int rodadas = 1;
     int pontos = 0;
     while (1) {
+        // Inicialização da rodada e contagem das ocorrências de cada número
         printf("############### %s - Rodada %d ###############\n", jogador, rodadas);
         rodadas++;
-        int count5 = 0;
-        int count1 = 0;
-        for (int i = 0; i < 5; i++) {
-            dados[i] = rand() % 6 + 1;
-            if (dados[i] == 1) count1++;
-            else if (dados[i] == 5) count5++;
+        int count_numeros[6] = {0, 0, 0, 0, 0, 0}; // pos 0 conta a quantidade de 1s, pos 1 conta quantidade de 2s e assim por diante
+        for (int i1 = 0; i1 < 5; i1++) {
+            dados[i1] = rand() % 6 + 1;
+            for (int i = 1; i <= 6; i ++) {
+                if (dados[i1] == i) count_numeros[i-1]++;
+            }
         }
+
+        // Resultado
         printf("Resultado dos dados do %s: ", jogador);
         for (int i = 0; i < 5; i ++) printf("%d ", dados[i]);
-        if (count5 > 0 || count1 > 0) {
+
+        // Verificação de sequências
+        // de 1 a 5
+        int sequencia1a5 = 1;
+        for (int i = 0; i < 5; i++) {
+            if (count_numeros[i] != 1) sequencia1a5 = 0;
+        }
+        if (sequencia1a5) {
+            pontos += 500;
+            printf("\n####### SEQUENCIA DE 1 A 5 => +500 PONTOS #######");
+            printf("\nPontuacao %s: %d\n", jogador, pontos);
+            continue;
+        }
+        // de 2 a 6
+        int sequencia2a6 = 1;
+        for (int i = 1; i < 6; i++) {
+            if (count_numeros[i] != 1) sequencia2a6 = 0;
+        }
+        if (sequencia2a6) {
+            pontos += 500;
+            printf("\n####### SEQUENCIA DE 2 A 6 => +500 PONTOS #######");
+            printf("\nPontuacao %s: %d\n", jogador, pontos);
+            continue;
+        }
+
+        // Verificação de sequência de 3x um número
+        int sequencia3x = 0;
+        for (int i = 0; i < 6; i++) {
+            if (count_numeros[i] > 3) {
+                sequencia3x = 1;
+                if (i == 0 && count_numeros[i] == 5) {
+                    if (count_numeros[i] == 5) {
+                        printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                        printf("@@@@@@@@@@ %s GANHOU O JOGO!!! @@@@@@@@@@", jogador);
+                        printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                        return 0;
+                    }
+                    pontos += pow(count_numeros[i] - 3, 2) * 1000;
+                    printf("\n####### SEQUENCIA DE %d 1s => +%d PONTOS #######\n", count_numeros[i], pontos);
+                    break;
+                }
+                pontos += pow(count_numeros[i] - 3, 2) * 100 * (i+1);
+                printf("\n####### SEQUENCIA DE %dX %d => +%d PONTOS #######\n", count_numeros[i], i+1, pontos);
+
+                break;
+            }
+        }
+        if (sequencia3x) {
+            continue;
+        }
+
+
+
+        // Verificação de separação dos 5s e 1s
+        if (count_numeros[4] > 0 || count_numeros[0] > 0) {
             if (pontos >= 600) {
                 int continuar_jogando;
                 printf("\nDeseja continuar jogando? (0 ou 1): ");
