@@ -302,11 +302,11 @@ int main() {
 
     int pontos_jogador = 0;
     int pontos_computador = 4900;
-    // if (jogador1_comeca) {
-    //     pontos_jogador += jogada(nome_jogador, pontos_jogador, pontos_computador, 0);
-    //     printf("\nPONTUACAO TOTAL %s: %d\n", nome_jogador, pontos_jogador);
-    //     Sleep(2000);
-    // }
+    if (jogador1_comeca) {
+        pontos_jogador += jogada(nome_jogador, pontos_jogador, pontos_computador, 0);
+        printf("\nPONTUACAO TOTAL %s: %d\n", nome_jogador, pontos_jogador);
+        Sleep(2000);
+    }
 
     while (1) {
         pontos_computador += jogada("Computador", pontos_jogador, pontos_computador, dificuldade);
@@ -318,15 +318,15 @@ int main() {
             break;
         }
         Sleep(2000);
-        // pontos_jogador += jogada(nome_jogador, pontos_jogador, pontos_computador, 0);
-        // printf("\nPONTUACAO TOTAL %s: %d\n", nome_jogador, pontos_jogador);
-        // if (pontos_jogador >= 5000) {
-        //     printf("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        //     printf("\n@@@@@@ %s GANHOU O JOGO!!! @@@@@@", nome_jogador);
-        //     printf("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        //     break;
-        // }
-        // Sleep(2000);
+        pontos_jogador += jogada(nome_jogador, pontos_jogador, pontos_computador, 0);
+        printf("\nPONTUACAO TOTAL %s: %d\n", nome_jogador, pontos_jogador);
+        if (pontos_jogador == 5000) {
+            printf("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            printf("\n@@@@@@ %s GANHOU O JOGO!!! @@@@@@", nome_jogador);
+            printf("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            break;
+        }
+        Sleep(2000);
     }
 
     return 0;
