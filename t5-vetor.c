@@ -11,6 +11,7 @@ int jogada(char nome[32], int pontos_jogador, int pontos_computador, int dificul
     int pontos = 0;
     int rodadas = 1;
     int pontuou_no_turno = 0;
+    int aux_pontuou = 0;
     while (1) {
         // evita que o jogador ganhe ah não ser que tenha conseguido exatos 5000 pontos
         if (dificuldade == 0) {
@@ -42,6 +43,7 @@ int jogada(char nome[32], int pontos_jogador, int pontos_computador, int dificul
                 if (dados[i1] == i) count_numeros[i-1]++;
             }
         }
+
 
         // Resultado
         printf("Jogando os dados...\n");
@@ -109,6 +111,7 @@ int jogada(char nome[32], int pontos_jogador, int pontos_computador, int dificul
                     pontos += add;
                     if (quantidade_dados == 0)
                         pontuou_no_turno = 1;
+                    else aux_pontuou = 1;
                     pontuou = 1;
                     printf("\n####### SEQUENCIA DE %d %ds => +%d PONTOS #######\n", count_numeros[i], i+1, add);
                     printf("Pontuacao turno %s: %d\n", nome, pontos);
@@ -183,6 +186,8 @@ int jogada(char nome[32], int pontos_jogador, int pontos_computador, int dificul
                 }
             }
             printf("\nQuais dados gostaria de separar? ");
+            if (dificuldade == 0)
+                printf("\nDigite a posicao dos dados (de 1 a 5) e 0 para salvar: ");
 
             int dados_para_separar[5] = {-1, -1, -1, -1, -1};
             // se todos dados da mesma pontuarem com 5 ou 1, ex: dois dados na mesa: 1 5, então todos
@@ -227,7 +232,6 @@ int jogada(char nome[32], int pontos_jogador, int pontos_computador, int dificul
                     }
                     input_correto = 1;
                     for (int i = 0; i < 5; i++) {
-                        printf("%d ", dados_para_separar[i]);
                         if (dados_para_separar[i] != 5 && dados_para_separar[i] != 1 && dados_para_separar[i] != -1) {
                             input_correto = 0;
                         }
@@ -274,6 +278,8 @@ int jogada(char nome[32], int pontos_jogador, int pontos_computador, int dificul
                 return pontos;
             }
         }
+        if (aux_pontuou)
+            pontuou_no_turno = aux_pontuou;
     }
 }
 
@@ -284,7 +290,7 @@ int main() {
 
     srand(time(0));
 
-    int jogador1_comeca = 0;
+    int jogador1_comeca = rand() % 2;
 
     char nome_jogador[32];
     printf("Digite o nome do jogador: ");
@@ -301,7 +307,7 @@ int main() {
     scanf("%d", &dificuldade);
 
     int pontos_jogador = 0;
-    int pontos_computador = 4900;
+    int pontos_computador = 0;
     if (jogador1_comeca) {
         pontos_jogador += jogada(nome_jogador, pontos_jogador, pontos_computador, 0);
         printf("\nPONTUACAO TOTAL %s: %d\n", nome_jogador, pontos_jogador);
